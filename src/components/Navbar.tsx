@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Bars3 from "./bars3";
-import { MenuItems } from "../utils/RawData";
+import { MenuItems } from "../app/utils/RawData";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);

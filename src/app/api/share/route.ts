@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
         },
       });
     } else {
-      await prismaClient.link.delete({
+      await prismaClient.link.deleteMany({
         where: {
           id: userId,
         },

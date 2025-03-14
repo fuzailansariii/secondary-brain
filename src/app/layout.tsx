@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Nunito, Quicksand } from "next/font/google";
 import "./globals.css";
-import Navbar from "./components/Navbar";
+import Navbar from "../components/Navbar";
 
 const nunito = Nunito({
   variable: "--font-nunito",

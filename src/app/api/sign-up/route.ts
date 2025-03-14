@@ -37,10 +37,13 @@ export async function POST(req: NextRequest) {
         email,
       },
     });
-    return NextResponse.json({
-      message: "User Registered Successfully",
-      data: newUser,
-    });
+    return NextResponse.json(
+      {
+        message: "User Registered Successfully",
+        data: newUser,
+      },
+      { status: 201 }
+    );
   } catch (error: any) {
     return NextResponse.json(
       {
