@@ -2,20 +2,16 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import { z } from "zod";
+import { RegisterSchema } from "@/app/utils/types";
 import axios from "axios";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
-const RegisterSchema = z.object({
-  username: z.string().min(3, "username must be at least 3 character"),
-  firstname: z.string().min(3, "firstname must be at least 3 character"),
-  lastname: z.string().optional(),
-  email: z.string().email("Invalid Email Address"),
-  password: z.string().min(6, "Password must be at least 6 character"),
-});
 export default function Register() {
   const router = useRouter();
 
@@ -23,59 +19,111 @@ export default function Register() {
     handleSubmit,
     register,
     reset,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = useForm({
     resolver: zodResolver(RegisterSchema),
   });
 
   const onSubmit = async (data: z.infer<typeof RegisterSchema>) => {
-    // console.log("FormData: ", data);
     try {
-      const response = await axios.post("/api/sign-up", data);
-      //   console.log("Response data: ",response)
-      if (response?.status) {
-        if (response.status === 201) {
-          console.log("Signup successfull");
-        } else if (response.status === 409) {
-          console.log("username already exist");
-        }
-      } else {
-        console.log("Signup failed");
-      }
-      router.push("/");
+      const response = await axios.post("/api/auth/register", data);
+      toast.success(response.data.message);
       reset();
-    } catch (error) {
-      console.error(error);
+      router.push("/login");
+    } catch (error: any) {
+      console.error("Registration Error:", error);
+      if (error.response) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
     }
   };
+
   return (
-    <div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Input
-          type="username"
-          placeholder="Username"
-          {...register("username")}
-        />
-        <Input
-          type="firstname"
-          placeholder="Firstname"
-          {...register("firstname")}
-        />
-        <Input
-          type="lastname"
-          placeholder="Lastname"
-          {...register("lastname")}
-        />
-        <Input type="email" placeholder="Email" {...register("email")} />
-        <Input
-          type="password"
-          placeholder="Password"
-          {...register("password")}
-        />
-        <Button variant={"default"} type="submit">
-          Login
-        </Button>
-      </form>
+    <div className="flex justify-center items-center min-h-screen">
+      <Card className="w-full max-w-md shadow-lg">
+        <CardHeader>
+          <CardTitle className="text-center text-2xl font-semibold">
+            Create an Account
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <fieldset disabled={isSubmitting} className="space-y-4">
+              {/* Username */}
+              <div>
+                <Input
+                  type="text"
+                  placeholder="Username"
+                  {...register("username")}
+                />
+                {errors.username && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.username.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Firstname & Lastname */}
+              <div className="flex gap-3">
+                <div className="w-1/2">
+                  <Input
+                    type="text"
+                    placeholder="Firstname"
+                    {...register("firstname")}
+                  />
+                  {errors.firstname && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.firstname.message}
+                    </p>
+                  )}
+                </div>
+                <div className="w-1/2">
+                  <Input
+                    type="text"
+                    placeholder="Lastname"
+                    {...register("lastname")}
+                  />
+                </div>
+              </div>
+
+              {/* Email */}
+              <div>
+                <Input
+                  type="email"
+                  placeholder="Email"
+                  {...register("email")}
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.email.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Password */}
+              <div>
+                <Input
+                  type="password"
+                  placeholder="Password"
+                  {...register("password")}
+                />
+                {errors.password && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.password.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Submit Button */}
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
+                {isSubmitting ? "Registering..." : "Register"}
+              </Button>
+            </fieldset>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

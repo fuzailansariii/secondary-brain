@@ -2,17 +2,17 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { LoginSchema } from "@/app/utils/types";
+import { toast } from "sonner";
+import { error } from "console";
 
-const LoginSchema = z.object({
-  email: z.string().email("Invalid Email Address"),
-  password: z.string().min(6, "Password must be at least 6 character"),
-});
 export default function Login() {
   const router = useRouter();
 
@@ -20,42 +20,80 @@ export default function Login() {
     handleSubmit,
     register,
     reset,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = useForm({
     resolver: zodResolver(LoginSchema),
   });
 
   const onSubmit = async (data: z.infer<typeof LoginSchema>) => {
-    // console.log("FormData: ", data);
     try {
-      const response = await signIn("credentail", {
-        redirect: false,
-        email: data.email,
-        password: data.password,
-      });
-      //   console.log("Response data: ",response)
-      if (response?.ok) {
-        console.log("Login successfull");
+      const response = await signIn("credentail", data);
+      if (response?.error) {
+        const errorMessage = response.error || "An error occured";
+        if (errorMessage.includes("Incorrect Email")) {
+          toast.error("Incorrect Email");
+        } else if (errorMessage.includes("Incorrect Password")) {
+          toast.error("Incorrect Password");
+        } else {
+          toast.error(errorMessage);
+        }
       } else {
-        console.log("Login failed");
+        toast.success("Login Successfull");
+        reset();
+        router.push("/");
       }
-      router.push("/");
-      reset();
-    } catch (error) {}
+    } catch (error) {
+      toast.error("Something went wrong");
+      console.error(error);
+    }
   };
   return (
-    <div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Input type="email" placeholder="Email" {...register("email")} />
-        <Input
-          type="password"
-          placeholder="Password"
-          {...register("password")}
-        />
-        <Button variant={"default"} type="submit">
-          Login
-        </Button>
-      </form>
+    <div className="flex justify-center items-center min-h-screen">
+      <Card className="w-full max-w-md shadow-lg">
+        <CardHeader>
+          <CardTitle className="text-center text-2xl font-semibold">
+            Login to Your Account
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <fieldset disabled={isSubmitting} className="space-y-4">
+              {/* Email */}
+              <div>
+                <Input
+                  type="email"
+                  placeholder="Email"
+                  {...register("email")}
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.email.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Password */}
+              <div>
+                <Input
+                  type="password"
+                  placeholder="Password"
+                  {...register("password")}
+                />
+                {errors.password && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.password.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Submit Button */}
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
+                {isSubmitting ? "Logging in..." : "Login"}
+              </Button>
+            </fieldset>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -3,11 +3,18 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 
 export async function POST(req: NextRequest) {
-  const { firstname, lastname, username, email, password } = await req.json();
-
-  // check if the user already exist with this username or email
-
   try {
+    const { firstname, lastname, username, email, password } = await req.json();
+
+    // check if the user already exist with this username or email
+    if (!firstname || !username || !email || !password) {
+      return NextResponse.json(
+        {
+          message: "All fields are required",
+        },
+        { status: 400 }
+      );
+    }
     const existingUser = await prismaClient.user.findFirst({
       where: {
         OR: [{ email }, { username }],
@@ -26,7 +33,7 @@ export async function POST(req: NextRequest) {
         }
       );
     }
-
+    // Hash the password and create user
     const hashedPassword = await bcrypt.hash(password, 12);
     const newUser = await prismaClient.user.create({
       data: {
@@ -40,7 +47,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         message: "User Registered Successfully",
-        data: newUser,
+        userData: {
+          id: newUser.id,
+          email: newUser.email,
+          firstname: newUser.firstname,
+        },
       },
       { status: 201 }
     );
