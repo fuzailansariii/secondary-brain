@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "../components/Navbar";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "../components/theme-provider";
+import AuthProvider from "@/Providers/AuthProvider";
 
 const nunito = Nunito({
   variable: "--font-nunito",
@@ -29,9 +30,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${quicksand.variable} ${nunito.variable} antialiased`}>
-        <Navbar />
-        {children}
-        <Toaster position="top-center" />
+        <AuthProvider>
+          <Navbar />
+          {children}
+          <Toaster position="top-center" />
+        </AuthProvider>
       </body>
     </html>
   );

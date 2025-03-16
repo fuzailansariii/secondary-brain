@@ -9,3 +9,27 @@ export const MenuItems = [
   { icon: PiLinkSimpleHorizontalBold, title: "Links" },
   { icon: FaHashtag, title: "Tags" },
 ];
+
+export const authenticationRoutes = [
+  {
+    title: "Register",
+    url: "/register",
+  },
+  {
+    title: "Login",
+    url: "/login",
+  },
+];
+
+{
+  /*
+  
+  
+  */
+}
+
+{
+  /*
+  
+  */
+}

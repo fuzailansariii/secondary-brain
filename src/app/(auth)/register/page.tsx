@@ -2,15 +2,22 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { RegisterSchema } from "@/app/utils/types";
+import { RegisterSchema } from "@/utils/types";
 import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Register() {
   const router = useRouter();
@@ -123,6 +130,14 @@ export default function Register() {
             </fieldset>
           </form>
         </CardContent>
+        <CardFooter className="text-center">
+          <p className="w-full">
+            Already a member?{" "}
+            <Link href={"/login"} className="text-blue-600 underline">
+              login
+            </Link>
+          </p>
+        </CardFooter>
       </Card>
     </div>
   );

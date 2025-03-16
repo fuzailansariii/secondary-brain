@@ -2,16 +2,23 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { LoginSchema } from "@/app/utils/types";
+import { LoginSchema } from "@/utils/types";
 import { toast } from "sonner";
 import { error } from "console";
+import Link from "next/link";
 
 export default function Login() {
   const router = useRouter();
@@ -93,6 +100,14 @@ export default function Login() {
             </fieldset>
           </form>
         </CardContent>
+        <CardFooter className="text-center">
+          <p className="w-full">
+            If you are new?{" "}
+            <Link href={"/register"} className="text-blue-600 underline">
+              register
+            </Link>
+          </p>
+        </CardFooter>
       </Card>
     </div>
   );

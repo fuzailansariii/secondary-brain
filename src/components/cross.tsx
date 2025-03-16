@@ -1,4 +1,4 @@
-interface BarsSizeProps {
+interface CrossSizeProps {
   size: "sm" | "md" | "lg";
 }
 
@@ -8,7 +8,7 @@ const sizeProp = {
   lg: "w-8 h-8",
 };
 
-export default function Bars3({ size }: BarsSizeProps) {
+export default function Cross({ size }: CrossSizeProps) {
   return (
     <div>
       <svg
@@ -20,8 +20,9 @@ export default function Bars3({ size }: BarsSizeProps) {
         className={sizeProp[size]}
       >
         <path
+          strokeLinecap="round"
           strokeLinejoin="round"
-          d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+          d="M6 18 18 6M6 6l12 12"
         />
       </svg>
     </div>
