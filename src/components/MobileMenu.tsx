@@ -1,11 +1,9 @@
 "use client";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
-  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
@@ -17,12 +15,15 @@ import { authenticationRoutes } from "@/utils/RawData";
 import Link from "next/link";
 import Exit from "./exit";
 import { signOut } from "next-auth/react";
+import { Button } from "./ui/button";
 
 export default function MobileMenu() {
   const { session, status } = useUserSession();
   const handleClick = () => {
     signOut();
   };
+
+  const handleAddContent = () => {};
 
   return (
     <div>
@@ -41,7 +42,7 @@ export default function MobileMenu() {
           </AlertDialogHeader>
 
           <AlertDialogDescription>
-            <div className="flex gap-4">
+            <div className="flex flex-col text-center gap-4">
               {!session ? (
                 authenticationRoutes.map((menu, index) => (
                   <Link
@@ -53,13 +54,20 @@ export default function MobileMenu() {
                   </Link>
                 ))
               ) : (
-                <div>
-                  <h1>
-                    hello, <span>{session.user.fullName}</span>
-                  </h1>
-                  <div onClick={handleClick}>
-                    <Exit size="lg" />
+                <div className="flex flex-col gap-3">
+                  <div className="flex justify-center items-center gap-3">
+                    <p className="font-quicksand text-lg">
+                      Hello,{" "}
+                      <span className="font-semibold">
+                        {session.user.fullName}
+                      </span>
+                    </p>
+                    <Button onClick={handleClick} variant="outline">
+                      <Exit size="md" />
+                      Logout
+                    </Button>
                   </div>
+                  <Button onClick={handleAddContent}>Add Content</Button>
                 </div>
               )}
             </div>

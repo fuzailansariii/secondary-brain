@@ -17,7 +17,6 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { LoginSchema } from "@/utils/types";
 import { toast } from "sonner";
-import { error } from "console";
 import Link from "next/link";
 
 export default function Login() {
@@ -28,13 +27,13 @@ export default function Login() {
     register,
     reset,
     formState: { isSubmitting, errors },
-  } = useForm({
+  } = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
   });
 
   const onSubmit = async (data: z.infer<typeof LoginSchema>) => {
     try {
-      const response = await signIn("credentail", data);
+      const response = await signIn("credentials", data);
       if (response?.error) {
         const errorMessage = response.error || "An error occured";
         if (errorMessage.includes("Incorrect Email")) {
