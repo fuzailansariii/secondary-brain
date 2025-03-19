@@ -1,79 +1,57 @@
 "use client";
-import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+
 import Bars3 from "./bars3";
-import Cross from "./cross";
-import { useUserSession } from "@/app/hook/useUserSession";
-import { authenticationRoutes } from "@/utils/RawData";
+import { useUserSession } from "@/hooks/useUserSession";
+import { MenuItems } from "@/utils/RawData";
 import Link from "next/link";
-import Exit from "./exit";
-import { signOut } from "next-auth/react";
 import { Button } from "./ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export default function MobileMenu() {
-  const { session, status } = useUserSession();
-  const handleClick = () => {
-    signOut();
-  };
+  const { session } = useUserSession();
 
   const handleAddContent = () => {};
 
   return (
-    <div>
-      <AlertDialog>
-        <AlertDialogTrigger className="flex items-center">
-          <Bars3 size="lg" />
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <div className="flex justify-between items-center">
-              <AlertDialogTitle>Secondary Brain</AlertDialogTitle>
-              <AlertDialogCancel>
-                <Cross size="lg" />
-              </AlertDialogCancel>
-            </div>
-          </AlertDialogHeader>
-
-          <AlertDialogDescription>
-            <div className="flex flex-col text-center gap-4">
-              {!session ? (
-                authenticationRoutes.map((menu, index) => (
-                  <Link
-                    key={index}
-                    href={menu.url}
-                    className="text-lg font-quicksand font-medium cursor-pointer"
-                  >
-                    {menu.title}
-                  </Link>
-                ))
-              ) : (
-                <div className="flex flex-col gap-3">
-                  <div className="flex justify-center items-center gap-3">
-                    <p className="font-quicksand text-lg">
-                      Hello,{" "}
-                      <span className="font-semibold">
-                        {session.user.fullName}
-                      </span>
-                    </p>
-                    <Button onClick={handleClick} variant="outline">
-                      <Exit size="md" />
-                      Logout
-                    </Button>
+    <Dialog>
+      <DialogTrigger>
+        <Bars3 size="lg" />
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle className="text-left my-5 font-quicksand font-medium text-2xl">
+            Secondary Brain
+          </DialogTitle>
+          <DialogDescription>
+            <div className="flex flex-col gap-3">
+              <div className="flex justify-center items-center gap-3">
+                {session && (
+                  <div className="flex flex-col gap-3">
+                    {MenuItems.map((menu, index) => (
+                      <Link href={menu.url} key={index}>
+                        <div className="flex items-center gap-2 text-xl">
+                          <menu.icon size={20} />
+                          {menu.title}
+                        </div>
+                      </Link>
+                    ))}
                   </div>
-                  <Button onClick={handleAddContent}>Add Content</Button>
-                </div>
-              )}
+                )}
+              </div>
+              <Button onClick={handleAddContent} className="mt-5">
+                Add Content
+              </Button>
             </div>
-          </AlertDialogDescription>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
+          </DialogDescription>
+        </DialogHeader>
+      </DialogContent>
+    </Dialog>
   );
 }

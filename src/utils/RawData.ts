@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
 import { FaHashtag, FaXTwitter, FaYoutube } from "react-icons/fa6";
 import { GrDocumentText } from "react-icons/gr";
 import { IconType } from "react-icons/lib";
@@ -6,6 +5,10 @@ import { PiLinkSimpleHorizontalBold } from "react-icons/pi";
 
 interface MenuItemsProps {
   icon: IconType;
+  title: string;
+  url: string;
+}
+interface AuthenticationRoutesProps {
   title: string;
   url: string;
 }
@@ -18,7 +21,7 @@ export const MenuItems: MenuItemsProps[] = [
   { icon: FaHashtag, title: "Tags", url: "/" },
 ];
 
-export const authenticationRoutes = [
+export const authenticationRoutes: AuthenticationRoutesProps[] = [
   {
     title: "Register",
     url: "/register",

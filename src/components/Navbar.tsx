@@ -1,60 +1,111 @@
 "use client";
 import React from "react";
-import { authenticationRoutes, MenuItems } from "../utils/RawData";
-import MobileMenu from "./MobileMenu";
+import { MenuItems } from "../utils/RawData";
 import Link from "next/link";
-import { useUserSession } from "@/app/hook/useUserSession";
+import { useUserSession } from "@/hooks/useUserSession";
 import { signOut } from "next-auth/react";
-import Exit from "./exit";
 import { Button } from "./ui/button";
-import { Loader2 } from "lucide-react"; // Spinner icon (optional)
+import avatarImage from "@/assets/UserAvatar.jpg";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import MobileMenu from "./MobileMenu";
 
 export default function Navbar() {
   const { session, status } = useUserSession();
 
-  const handleClick = () => {
+  const handleLogout = () => {
     signOut();
   };
 
-  return (
-    <div className="m-2 p-2 flex justify-between items-center">
-      <Link href="/" className="text-2xl m-2 font-quicksand cursor-pointer">
-        Secondary Brain
-      </Link>
+  const userInitial = session?.user?.fullName
+    ? session.user.fullName.charAt(0).toUpperCase()
+    : "U";
 
+  return (
+    <div className="flex justify-between items-center md:mx-16 mx-2 shadow-lg md:my-8 my-4 md:px-8 px-4 md:py-4 py-2 rounded-full sticky top-2 z-50">
+      {/* Logo/Title */}
       <div>
-        {/* Desktop Menu */}
-        <div className="hidden md:flex gap-4 items-center mx-10">
-          {status === "loading" ? (
-            <Loader2 className="animate-spin text-primary" size={24} />
-          ) : !session ? (
-            authenticationRoutes.map((menu, index) => (
+        <Link
+          href="/"
+          className="md:text-2xl text-xl font-quicksand cursor-pointer"
+        >
+          Secondary Brain
+        </Link>
+      </div>
+
+      {/* Menu Items */}
+      <div className="hidden md:flex gap-7 items-center mx-16">
+        {status === "loading"
+          ? null
+          : session &&
+            MenuItems.map((menu, index) => (
               <Link
                 key={index}
                 href={menu.url}
                 className="text-lg font-quicksand font-medium cursor-pointer"
               >
-                {menu.title}
+                <div className="flex items-center gap-2">
+                  <menu.icon />
+                  {menu.title}
+                </div>
               </Link>
-            ))
-          ) : (
-            <div className="flex justify-center items-center gap-3">
-              <p className="font-quicksand text-lg">
-                Hello,{" "}
-                <span className="font-semibold">{session.user.fullName}</span>
-              </p>
-              <Button onClick={handleClick} variant="outline">
-                <Exit size="md" />
-                Logout
-              </Button>
-            </div>
-          )}
-        </div>
+            ))}
+      </div>
 
-        {/* Mobile Menu */}
-        <div className="md:hidden block items-center">
-          <MobileMenu />
-        </div>
+      {/* Authentication menu */}
+      <div className="flex items-center gap-3">
+        {!session ? (
+          <>
+            <Link href="/login">
+              <Button variant="outline" className="rounded-full">
+                Login
+              </Button>
+            </Link>
+            <Link href="/register">
+              <Button variant="default" className="rounded-full">
+                Register
+              </Button>
+            </Link>
+          </>
+        ) : (
+          <>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Avatar>
+                  <AvatarImage
+                    src={avatarImage.src}
+                    width={35}
+                    height={35}
+                    className="rounded-full"
+                    alt="User Avatar"
+                  />
+                  <AvatarFallback>{userInitial}</AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-48 mt-2">
+                <DropdownMenuLabel>{session.user.fullName}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/profile">Profile</Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout}>
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <div className="md:hidden block">
+              <MobileMenu />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
