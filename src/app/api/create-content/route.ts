@@ -32,8 +32,8 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({
-      newContent,
+    return NextResponse.json<ApiResponse>({
+      message: `Content added successfully, contentId: ${newContent.id}`,
     });
   } catch (error: any) {
     return NextResponse.json({

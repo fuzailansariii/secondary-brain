@@ -13,4 +13,11 @@ const LoginSchema = z.object({
   password: z.string().min(6, "password must be at least 6 character"),
 });
 
-export { RegisterSchema, LoginSchema };
+const CreateContentSchema = z.object({
+  title: z.string().min(3, "Title must be at least 3 character"),
+  type: z.enum(["Tweet", "Youtube", "Article"]),
+  link: z.string().url("Invalid link"),
+  tags: z.array(z.string()).optional(),
+});
+
+export { RegisterSchema, LoginSchema, CreateContentSchema };

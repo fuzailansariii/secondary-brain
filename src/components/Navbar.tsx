@@ -29,7 +29,10 @@ export default function Navbar() {
     : "U";
 
   return (
-    <div className="flex justify-between items-center md:mx-16 mx-2 shadow-lg md:my-8 my-4 md:px-8 px-4 md:py-4 py-2 rounded-full sticky top-2 z-50">
+    <div
+      className="flex justify-between items-center md:mx-16 mx-2 shadow-lg md:my-8 my-4 md:px-8 px-4 md:py-4 py-2
+    rounded-full sticky top-2 z-50 bg-gradient-to-r from-slate-900 to-slate-700"
+    >
       {/* Logo/Title */}
       <div>
         <Link

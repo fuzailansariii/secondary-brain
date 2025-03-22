@@ -55,11 +55,12 @@ export async function POST(req: NextRequest) {
       },
       { status: 201 }
     );
-  } catch (error: any) {
+  } catch (error) {
+    console.log(error);
     return NextResponse.json(
       {
         message: "An error occurred during registration.",
-        error: error.message,
+        error: error,
       },
       { status: 500 }
     );

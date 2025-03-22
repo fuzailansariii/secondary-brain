@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import AuthProvider from "@/Providers/AuthProvider";
 import Navbar from "@/components/Navbar";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const nunito = Nunito({
   variable: "--font-nunito",
@@ -27,12 +28,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${quicksand.variable} ${nunito.variable} antialiased`}>
         <AuthProvider>
-          <Navbar />
-          {children}
-          <Toaster position="top-center" />
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Navbar />
+            {children}
+            <Toaster position="top-center" />
+          </ThemeProvider>
         </AuthProvider>
       </body>
     </html>
