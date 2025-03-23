@@ -104,7 +104,7 @@ export default function Navbar() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <div className="md:hidden block">
+            <div className="md:hidden flex justify-items-center">
               <MobileMenu />
             </div>
           </>

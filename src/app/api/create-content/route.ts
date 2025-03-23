@@ -13,7 +13,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   const session = await getServerSession(Options);
   try {
-    const { title, type, link, tags } = await req.json();
+    const { title, type, link } = await req.json();
     const userId = session?.user.id;
 
     if (!userId) {
@@ -28,12 +28,12 @@ export async function POST(req: NextRequest) {
         link,
         type,
         userId,
-        tags,
       },
     });
 
-    return NextResponse.json<ApiResponse>({
-      message: `Content added successfully, contentId: ${newContent.id}`,
+    return NextResponse.json({
+      message: "Content added successfully",
+      contentId: newContent.id,
     });
   } catch (error: any) {
     return NextResponse.json({

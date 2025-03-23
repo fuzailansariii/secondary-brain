@@ -31,7 +31,7 @@ export default function CardData({ title, link, type }: CardDataProps) {
         {/* Fixed height */}
         <div className="flex justify-between">
           <CardHeader>
-            <CardTitle>{type}</CardTitle>
+            <CardTitle className="text-xl">{type}</CardTitle>
           </CardHeader>
           <div className="flex gap-4 justify-center items-center mx-5">
             <Link href={link} target="_blank">
