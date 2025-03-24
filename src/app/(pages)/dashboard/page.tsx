@@ -3,8 +3,41 @@ import CardData from "@/components/CardData.";
 import { Button } from "@/components/ui/button";
 import CustomDialog from "@/components/CustomDialog";
 import ContentModel from "@/components/ContentModel";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+interface ContentType {
+  id: string;
+  title: string;
+  link: string;
+  type: "Youtube" | "Tweet";
+}
 
 export default function Dashboard() {
+  const [contentItem, setContentItem] = useState<ContentType[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  useEffect(() => {
+    async function fetchMemory() {
+      try {
+        const response = await axios.get("/api/all-content");
+        if (response.data?.data) {
+          setContentItem(response.data.data);
+        }
+        // TODO: Add toast message
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error("Axios error:", error.message);
+        } else {
+          console.error("Unexpected error occurred", error);
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchMemory();
+  }, []);
+
   return (
     <div className="mx-auto max-w-7xl my-16">
       <div className="flex justify-between items-center mr-5">
@@ -18,33 +51,26 @@ export default function Dashboard() {
             title="Add to Secondary Brain"
             description="Paste your link and select type."
           >
-            <ContentModel
-              inputFields={[
-                { name: "title", placeholder: "Enter Title", type: "text" },
-                {
-                  name: "link",
-                  placeholder: "Enter YouTube or Twitter Link",
-                  type: "text",
-                },
-              ]}
-              selectTitle="Select Type"
-              selectOptions={["Youtube", "Tweet", "Article"]}
-            />
+            <ContentModel />
           </CustomDialog>
         </div>
       </div>
       {/* Rendering Data in card */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mx-auto justify-items-center gap-8">
-        <CardData
-          type="Youtube"
-          title="Youtube Embed"
-          link="https://youtu.be/ofHGE-85EIA?si=hUsGrtMPdkl3squD"
-        />
-        <CardData
-          type="Tweet"
-          title="Tweet Embed"
-          link="https://x.com/fuzail_ansarii/status/1840449980156514633"
-        />
+        {loading ? (
+          <p className="text-center col-span-full">Loading...</p>
+        ) : contentItem.length === 0 ? (
+          <p className="text-center col-span-full">No content found.</p>
+        ) : (
+          contentItem.map((item) => (
+            <CardData
+              key={item.id}
+              type={item.type}
+              title={item.title}
+              link={item.link}
+            />
+          ))
+        )}
       </div>
     </div>
   );

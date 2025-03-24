@@ -27,11 +27,17 @@ export async function GET() {
       message: "Contents fetched successfully",
       data: allContent,
     });
-  } catch (error: any) {
+  } catch (error) {
+    let errorMessage = "Unknown error";
+
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+
     return NextResponse.json(
       {
         message: "Error fetching Contents.",
-        error: error.message,
+        error: errorMessage,
       },
       { status: 500 }
     );

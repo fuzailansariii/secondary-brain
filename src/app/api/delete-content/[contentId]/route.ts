@@ -68,15 +68,19 @@ export async function DELETE(req: NextRequest) {
       },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error) {
+    let errorMessage = "Unknown error";
+
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+
     return NextResponse.json(
       {
-        message: "Error while deleting the content",
-        error: error.message,
+        message: "Error fetching Contents.",
+        error: errorMessage,
       },
-      {
-        status: 500,
-      }
+      { status: 500 }
     );
   }
 }

@@ -15,7 +15,7 @@ const LoginSchema = z.object({
 
 const CreateContentSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 character"),
-  type: z.enum(["Tweet", "Youtube", "Article"]),
+  type: z.enum(["Tweet", "Youtube"]),
   link: z.string().url("Invalid link"),
   tags: z.array(z.string()).optional(),
 });

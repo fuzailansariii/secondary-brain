@@ -35,10 +35,19 @@ export async function POST(req: NextRequest) {
       message: "Content added successfully",
       contentId: newContent.id,
     });
-  } catch (error: any) {
-    return NextResponse.json({
-      message: "Error adding the content",
-      error: error.message,
-    });
+  } catch (error) {
+    let errorMessage = "Unknown error";
+
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+
+    return NextResponse.json(
+      {
+        message: "Error fetching Contents.",
+        error: errorMessage,
+      },
+      { status: 500 }
+    );
   }
 }

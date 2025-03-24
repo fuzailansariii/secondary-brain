@@ -36,11 +36,15 @@ export default function Register() {
       toast.success(response.data.message);
       reset();
       router.push("/login");
-    } catch (error: any) {
-      console.error("Registration Error:", error);
-      if (error.response) {
-        toast.error(error.response.data.message);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("Registration Axios Error:", error);
+        toast.error(
+          error.response?.data.message ||
+            "Something went wrong. Please try again."
+        );
       } else {
+        console.error("Unknown Error:", error);
         toast.error("Something went wrong. Please try again.");
       }
     }

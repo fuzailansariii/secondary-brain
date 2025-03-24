@@ -33,7 +33,10 @@ export default function Login() {
 
   const onSubmit = async (data: z.infer<typeof LoginSchema>) => {
     try {
-      const response = await signIn("credentials", data);
+      const response = await signIn("credentials", {
+        ...data,
+        redirect: false,
+      });
       if (response?.error) {
         const errorMessage = response.error || "An error occured";
         if (errorMessage.includes("Incorrect Email")) {
@@ -46,7 +49,7 @@ export default function Login() {
       } else {
         toast.success("Login Successfull");
         reset();
-        router.push("/");
+        router.push("/dashboard");
       }
     } catch (error) {
       toast.error("Something went wrong");
