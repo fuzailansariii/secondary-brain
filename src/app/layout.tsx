@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import AuthProvider from "@/Providers/AuthProvider";
 import Navbar from "@/components/Navbar";
 import { ThemeProvider } from "@/components/theme-provider";
+import Footer from "@/components/Footer";
 
 const nunito = Nunito({
   variable: "--font-nunito",
@@ -39,6 +40,7 @@ export default function RootLayout({
           >
             <Navbar />
             {children}
+            <Footer />
             <Toaster position="top-center" />
           </ThemeProvider>
         </AuthProvider>

@@ -13,6 +13,11 @@ interface AuthenticationRoutesProps {
   url: string;
 }
 
+interface FeaturesCardDataProps {
+  title: string;
+  description: string;
+}
+
 export const MenuItems: MenuItemsProps[] = [
   { icon: FaXTwitter, title: "Tweets", url: "/" },
   { icon: FaYoutube, title: "Videos", url: "/" },
@@ -29,5 +34,20 @@ export const authenticationRoutes: AuthenticationRoutesProps[] = [
   {
     title: "Login",
     url: "/login",
+  },
+];
+
+export const featuresCardData: FeaturesCardDataProps[] = [
+  {
+    title: "Save Any Link",
+    description: "Store links from YouTube, Twitter (X), blogs, and more.",
+  },
+  {
+    title: "Organized Recall",
+    description: "Everything you save is ready to be viewed when you need it.",
+  },
+  {
+    title: "Distraction-Free",
+    description: "No ads, no clutter—just the content you care about.",
   },
 ];
