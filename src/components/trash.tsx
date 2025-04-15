@@ -3,6 +3,7 @@ import React from "react";
 
 interface TrashSizeProps {
   size: "sm" | "md" | "lg";
+  handleClick: () => void;
 }
 
 const sizeProp = {
@@ -11,7 +12,7 @@ const sizeProp = {
   lg: "w-9 h-9",
 };
 
-export default function Trash({ size }: TrashSizeProps) {
+export default function Trash({ size, handleClick }: TrashSizeProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -19,7 +20,8 @@ export default function Trash({ size }: TrashSizeProps) {
       viewBox="0 0 24 24"
       strokeWidth="1.5"
       stroke="currentColor"
-      className={sizeProp[size]}
+      className={sizeProp[size] + " " + "cursor-pointer"}
+      onClick={handleClick}
     >
       <path
         strokeLinecap="round"

@@ -5,8 +5,11 @@ import Trash from "./trash";
 import Link from "next/link";
 import { extractYouTubeId, extractTweetId } from "@/utils/ExtractIds";
 import { Tweet } from "react-tweet";
+import axios from "axios";
+import { toast } from "sonner";
 
 interface CardDataProps {
+  id: string;
   type: "Youtube" | "Tweet" | "Text";
   title: string;
   link: string;
@@ -17,13 +20,26 @@ export const YouTubeEmbed = ({ videoId }: { videoId: string }) => (
     className="w-full rounded-lg aspect-video pt-5"
     src={`https://www.youtube.com/embed/${videoId}`}
     title="YouTube video player"
-    frameBorder="0"
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     allowFullScreen
   ></iframe>
 );
 
-export default function CardData({ title, link, type }: CardDataProps) {
+export default function CardData({ id, title, link, type }: CardDataProps) {
+  const handleDelete = async () => {
+    try {
+      const response = await axios.delete(`/api/delete-content/${id}`);
+      if (response.status === 200) {
+        toast.success("Content Deleted Successfully");
+      } else {
+        toast.error("Failed to delete content");
+      }
+    } catch (error) {
+      console.error("Delete error:", error);
+      toast.error("Something went wrong while deleting");
+    }
+  };
+
   return (
     <div className="w-96">
       {/* Fixed width for all cards */}
@@ -37,7 +53,7 @@ export default function CardData({ title, link, type }: CardDataProps) {
             <Link href={link} target="_blank">
               <Share size="sm" />
             </Link>
-            <Trash size="sm" />
+            <Trash size="sm" handleClick={handleDelete} />
           </div>
         </div>
         <CardContent className="flex-1 overflow-auto">

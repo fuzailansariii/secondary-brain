@@ -14,6 +14,8 @@ interface CustomDialogProps {
   title: string;
   description?: string;
   children?: ReactNode; // Additional content (like forms, inputs)
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
 export default function CustomDialog({
@@ -21,9 +23,11 @@ export default function CustomDialog({
   title,
   description,
   children,
+  open,
+  onOpenChange,
 }: CustomDialogProps) {
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent>
         <DialogHeader>

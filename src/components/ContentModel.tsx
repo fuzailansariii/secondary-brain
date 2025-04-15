@@ -13,11 +13,18 @@ import { Button } from "./ui/button";
 import { z } from "zod";
 import { CreateContentSchema } from "@/utils/types";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 type FormValue = z.infer<typeof CreateContentSchema>;
 
-export default function ContentModel() {
+interface ContentModelProps {
+  onSuccess: () => void;
+}
+
+export default function ContentModel({ onSuccess }: ContentModelProps) {
   const selectOptions: ["Youtube", "Tweet"] = ["Youtube", "Tweet"];
+
+  const router = useRouter();
 
   const {
     register,
@@ -37,10 +44,12 @@ export default function ContentModel() {
   // TODO: add toast message
   const onSubmit = async (data: FormValue) => {
     try {
-      console.log("Form Data: ", data);
-      const response = await axios.post("/api/create-content", data);
-      console.log(response);
+      // console.log("Form Data: ", data);
+      await axios.post("/api/create-content", data);
+      // console.log(response);
       reset();
+      onSuccess();
+      router.refresh();
     } catch (error) {
       console.error("API Error:", error);
       if (axios.isAxiosError(error)) {

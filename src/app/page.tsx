@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { featuresCardData } from "@/utils/RawData";
 import FeaturesCard from "@/components/FeaturesCard";
+import CardData from "@/components/CardData.";
 
 export default function Home() {
   return (
@@ -36,13 +37,17 @@ export default function Home() {
 
         {/* Right Section */}
         <div className="md:w-1/2">
-          <div className="border rounded-xl shadow-md p-4 bg-white">
-            <p className="text-sm font-semibold text-gray-500 mb-2">Preview</p>
-            <div className="aspect-video bg-gray-100 flex items-center justify-center rounded-md">
-              <span className="text-gray-400">
+          <p className="text-sm font-semibold text-gray-500 mb-2">Preview</p>
+          <div className="flex items-center justify-center rounded-md">
+            {/* <span className="text-gray-400">
                 [ Embedded YouTube / Tweet Preview ]
-              </span>
-            </div>
+              </span> */}
+            <CardData
+              id="1911998203538391224"
+              link="https://x.com/fuzail_ansarii/status/1911998203538391224"
+              title="Portfolio"
+              type="Tweet"
+            />
           </div>
         </div>
       </div>

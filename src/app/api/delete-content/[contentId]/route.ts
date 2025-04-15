@@ -1,13 +1,15 @@
+import { Options } from "@/utils/options";
 import prismaClient from "@/utils/prismaClient";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function DELETE(req: NextRequest) {
-  const session = await getServerSession();
+  const session = await getServerSession(Options);
+
   try {
     // Extract contentId from query param
     // const contentId = req.nextUrl.searchParams.get("contentId");
-    const contentId = req.nextUrl.pathname.split("/")[4];
+    const contentId = req.nextUrl.pathname.split("/")[3];
     if (!contentId) {
       return NextResponse.json(
         {
@@ -21,6 +23,7 @@ export async function DELETE(req: NextRequest) {
 
     // Extracting user from JWT
     const userId = session?.user.id;
+    // console.log("UserId: ", userId);
     if (!userId) {
       return NextResponse.json(
         {

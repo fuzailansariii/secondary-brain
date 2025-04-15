@@ -16,6 +16,8 @@ interface ContentType {
 export default function Dashboard() {
   const [contentItem, setContentItem] = useState<ContentType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   useEffect(() => {
     async function fetchMemory() {
       try {
@@ -47,11 +49,13 @@ export default function Dashboard() {
 
           {/* Popup model to add content */}
           <CustomDialog
+            open={isDialogOpen}
+            onOpenChange={setIsDialogOpen}
             trigger={<Button variant={"default"}>Create</Button>}
             title="Add to Secondary Brain"
             description="Paste your link and select type."
           >
-            <ContentModel />
+            <ContentModel onSuccess={() => setIsDialogOpen(false)} />
           </CustomDialog>
         </div>
       </div>
@@ -65,6 +69,7 @@ export default function Dashboard() {
           contentItem.map((item) => (
             <CardData
               key={item.id}
+              id={item.id}
               type={item.type}
               title={item.title}
               link={item.link}
